@@ -1,0 +1,53 @@
+/* 保证整页全宽全高，并去除限制 */
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  overflow-y: auto;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+/* 不要用 flex 包围页面根节点 */
+body {
+  display: block;
+}
+
+/* h1 样式重置（避免默认居中太大） */
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+/* 清理默认按钮 */
+button {
+  all: unset;
+  font-family: inherit;
+}
+
+/* 你可保留以下内容作为 Vite 默认动画按钮优化 */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
