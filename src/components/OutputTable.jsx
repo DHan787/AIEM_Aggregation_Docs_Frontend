@@ -13,6 +13,9 @@ export default function OutputTable({
         <div style={{ overflowX: "auto", width: "100%" }}>
             <div className="container mt-4" style={{ maxWidth: "80%", minWidth: "60%", margin: "0 auto" }}>
                 <h2 className="text-secondary mb-3">Aggregated Diagnoses</h2>
+                <p className="text-muted">
+                    Check the boxes next to the diagnoses with which you agree. Add new diagnoses if any are missing.
+                </p>
                 <table className="table table-bordered text-center">
                     <thead className="table-primary">
                         <tr>
@@ -108,7 +111,7 @@ export default function OutputTable({
 
                 <div className="text-center mt-4">
                     <button className="btn btn-primary px-5" onClick={onSubmit}>
-                        Submit All
+                        Submit Your Feedback
                     </button>
                 </div>
             </div>
