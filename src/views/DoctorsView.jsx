@@ -57,11 +57,11 @@ export default function DoctorsView() {
             updated[idx].probability = value;
             setDifferentDiagnoses(updated);
         } else if (type === "diff-urgency") {
-            updated[idx].urgencyValue = value;
-            setDifferentDiagnoses(updated);
+            // updated[idx].urgencyValue = value;
+            // setDifferentDiagnoses(updated);
         } else if (type === "urgency") {
-            updated[idx].urgencyValue = value;
-            setDiagnoses(updated);
+            // updated[idx].urgencyValue = value;
+            // setDiagnoses(updated);
         } else {
             updated[idx].spotValue = parseFloat(value);
             setDiagnoses(updated);
@@ -99,7 +99,7 @@ export default function DoctorsView() {
                     ? parseFloat(d.spotValue)
                     : 1
                 : 0,
-            urgency: d.urgencyValue || 0
+            // urgency: d.urgencyValue || 0
         }));
 
         const allProbs = [
@@ -109,10 +109,10 @@ export default function DoctorsView() {
             ),
         ];
 
-        const allUrgencies = [
-            ...updatedDiagnoses.map((d) => d.urgency || 0),
-            ...differentDiagnoses.map((d) => d.urgencyValue || 0)
-        ];
+        // const allUrgencies = [
+        //     ...updatedDiagnoses.map((d) => d.urgency || 0),
+        //     ...differentDiagnoses.map((d) => d.urgencyValue || 0)
+        // ];
 
 
         const differentLines = differentDiagnoses.map((d) => d.diagnosis);
@@ -124,7 +124,7 @@ export default function DoctorsView() {
                 body: JSON.stringify({
                     case_id: caseId,
                     probabilities: allProbs,
-                    urgencies: allUrgencies,
+                    // urgencies: allUrgencies,
                     different: differentLines.join("\n"),
                 }),
             });

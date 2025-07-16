@@ -17,32 +17,45 @@ export default function OutputTable({
                 <p className="text-muted">
                     Check the boxes next to the diagnoses with which you agree. Add new diagnoses if any are missing.
                 </p>
-                <table className="table table-bordered text-center">
+                <table className="table table-bordered text-center" style={{ fontSize: "0.9rem" }}>
                     <thead className="table-primary">
                         <tr>
                             <th>Diagnosis</th>
-                            <th>Aggregated Probability</th>
-                            <th>Aggregated Urgency</th>
+                            <th>Probability</th>
+                            <th>Urgency</th>
                             <th>On-the-Spot Diagnosis (P)</th>
                         </tr>
                         <tr>
                             <th colSpan="4" className="text-end small pe-3">
-                                <span className="me-2">Urgency Legend:</span>
-                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "red", marginRight: "5px", border: "1px solid #ccc" }}></span>
-                                <span className="me-2">High</span>
-                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "yellow", marginRight: "5px", border: "1px solid #ccc" }}></span>
-                                <span className="me-2">Medium</span>
-                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "white", border: "1px solid #ccc" }}></span>
-                                <span>Low</span>
+                                <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+                                    <span>Urgency Legend:</span>
+
+                                    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                                        <span style={{ width: "15px", height: "15px", backgroundColor: "red" }}></span>
+                                        <span>High</span>
+                                    </span>
+
+                                    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                                        <span style={{ width: "15px", height: "15px", backgroundColor: "yellow" }}></span>
+                                        <span>Medium</span>
+                                    </span>
+
+                                    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                                        <span style={{ width: "15px", height: "15px", backgroundColor: "white", border: "1px solid #ccc" }}></span>
+                                        <span>Low</span>
+                                    </span>
+                                </span>
                             </th>
                         </tr>
+
+
                     </thead>
                     <tbody>
                         {[...diagnoses]
                             .map((diagnosis, i) => ({ ...diagnosis, originalIndex: i }))
                             .sort((a, b) => b.probability - a.probability)
-                            .map((diagnosis, idx) => (
-                                <tr key={idx}>
+                            .map((diagnosis) => (
+                                <tr key={diagnosis.originalIndex}>
                                     <td>{diagnosis.diagnosis}</td>
                                     <td>{diagnosis.probability.toFixed(1)}</td>
                                     <td>
@@ -50,7 +63,7 @@ export default function OutputTable({
                                             width: "20px",
                                             height: "20px",
                                             margin: "auto",
-                                            border: "1px solid #ccc",
+                                            // border: "1px solid #ccc",
                                             backgroundColor:
                                                 diagnosis.urgency === 3 ? "red" :
                                                     diagnosis.urgency === 2 ? "yellow" :
@@ -58,7 +71,7 @@ export default function OutputTable({
                                         }}></div>
                                     </td>
                                     <td>
-                                        <input
+                                        {/* <input
                                             type="number"
                                             min="0.1"
                                             max="1"
@@ -74,15 +87,15 @@ export default function OutputTable({
                                                 }
                                             }}
                                             className="form-control d-inline w-50 me-2"
-                                        />
+                                        /> */}
                                         <input
                                             type="checkbox"
-                                            checked={diagnoses[diagnosis.originalIndex]?.selected || false}
+                                            checked={diagnosis.selected || false}
                                             onChange={() => onCheckboxChange(diagnosis.originalIndex)}
                                         />
 
                                         {/* Urgency selector (only visible when selected) */}
-                                        {diagnoses[diagnosis.originalIndex]?.selected && (
+                                        {/* {diagnoses[diagnosis.originalIndex]?.selected && (
                                             <div style={{ display: "flex", marginTop: "5px", height: "20px", border: "1px solid #ccc", borderRadius: "3px", overflow: "hidden" }}>
                                                 {[3, 2, 1].map((level) => {
                                                     const colors = {
@@ -111,7 +124,7 @@ export default function OutputTable({
                                                     );
                                                 })}
                                             </div>
-                                        )}
+                                        )} */}
                                     </td>
                                 </tr>
                             ))}
