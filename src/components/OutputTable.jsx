@@ -13,7 +13,7 @@ export default function OutputTable({
     return (
         <div style={{ overflowX: "auto", width: "100%" }}>
             <div className="container mt-4" style={{ maxWidth: "80%", minWidth: "60%", margin: "0 auto" }}>
-                <h2 className="text-secondary mb-3">Aggregated Diagnoses</h2>
+                <h2 className="text-secondary mb-3">Diagnoses</h2>
                 <p className="text-muted">
                     Check the boxes next to the diagnoses with which you agree. Add new diagnoses if any are missing.
                 </p>
