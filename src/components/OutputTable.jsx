@@ -21,7 +21,19 @@ export default function OutputTable({
                         <tr>
                             <th>Diagnosis</th>
                             <th>Aggregated Probability</th>
+                            <th>Aggregated Urgency</th>
                             <th>On-the-Spot Diagnosis (P)</th>
+                        </tr>
+                        <tr>
+                            <th colSpan="4" className="text-end small pe-3">
+                                <span className="me-2">Urgency Legend:</span>
+                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "red", marginRight: "5px", border: "1px solid #ccc" }}></span>
+                                <span className="me-2">High</span>
+                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "yellow", marginRight: "5px", border: "1px solid #ccc" }}></span>
+                                <span className="me-2">Medium</span>
+                                <span style={{ display: "inline-block", width: "15px", height: "15px", backgroundColor: "white", border: "1px solid #ccc" }}></span>
+                                <span>Low</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +45,18 @@ export default function OutputTable({
                                     <td>{diagnosis.diagnosis}</td>
                                     <td>{diagnosis.probability.toFixed(1)}</td>
                                     <td>
+                                        <div style={{
+                                            width: "20px",
+                                            height: "20px",
+                                            margin: "auto",
+                                            border: "1px solid #ccc",
+                                            backgroundColor:
+                                                diagnosis.urgency === 3 ? "red" :
+                                                    diagnosis.urgency === 2 ? "yellow" :
+                                                        "white"
+                                        }}></div>
+                                    </td>
+                                    <td>
                                         <input
                                             type="number"
                                             min="0.1"
@@ -43,7 +67,7 @@ export default function OutputTable({
                                                 const value = parseFloat(e.target.value);
                                                 if (!isNaN(value)) {
                                                     onInputChange(diagnosis.originalIndex, value, "spot");
-                                                    onCheckboxChange(diagnosis.originalIndex, true, "selected");
+                                                    onCheckboxChange(diagnosis.originalIndex);
                                                 } else {
                                                     onInputChange(diagnosis.originalIndex, "", "spot");
                                                 }
@@ -55,6 +79,38 @@ export default function OutputTable({
                                             checked={diagnoses[diagnosis.originalIndex]?.selected || false}
                                             onChange={() => onCheckboxChange(diagnosis.originalIndex)}
                                         />
+
+                                        {/* Urgency selector (only visible when selected) */}
+                                        {diagnoses[diagnosis.originalIndex]?.selected && (
+                                            <div style={{ display: "flex", marginTop: "5px", height: "20px", border: "1px solid #ccc", borderRadius: "3px", overflow: "hidden" }}>
+                                                {[3, 2, 1].map((level) => {
+                                                    const colors = {
+                                                        3: "#8B0000",  // dark red
+                                                        2: "#CCCC00",  // dark yellow
+                                                        1: "#e0e0e0"   // dark white
+                                                    };
+                                                    const activeColors = {
+                                                        3: "#FF4C4C",  // light red
+                                                        2: "#FFFF66",  // light yellow
+                                                        1: "#FFFFFF"   // bright white
+                                                    };
+                                                    const isActive = diagnosis.urgencyValue === level;
+                                                    return (
+                                                        <div
+                                                            key={level}
+                                                            onClick={() => onInputChange(diagnosis.originalIndex, level, "urgency")}
+                                                            style={{
+                                                                flex: 1,
+                                                                cursor: "pointer",
+                                                                backgroundColor: isActive ? activeColors[level] : colors[level],
+                                                                borderRight: level !== 1 ? "1px solid #999" : "none"
+                                                            }}
+                                                            title={level === 3 ? "High" : level === 2 ? "Medium" : "Low"}
+                                                        ></div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -71,6 +127,7 @@ export default function OutputTable({
                         <tr>
                             <th>Diagnosis</th>
                             <th>Probability (0.1 - 1)</th>
+                            <th>Urgency</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -97,6 +154,36 @@ export default function OutputTable({
                                     />
                                 </td>
                                 <td>
+                                    <div style={{ display: "flex", height: "20px", border: "1px solid #ccc", borderRadius: "3px", overflow: "hidden" }}>
+                                        {[3, 2, 1].map((level) => {
+                                            const colors = {
+                                                3: "#8B0000",
+                                                2: "#CCCC00",
+                                                1: "#e0e0e0"
+                                            };
+                                            const activeColors = {
+                                                3: "#FF4C4C",
+                                                2: "#FFFF66",
+                                                1: "#FFFFFF"
+                                            };
+                                            const isActive = row.urgencyValue === level;
+                                            return (
+                                                <div
+                                                    key={level}
+                                                    onClick={() => onInputChange(idx, level, "diff-urgency")}
+                                                    style={{
+                                                        flex: 1,
+                                                        cursor: "pointer",
+                                                        backgroundColor: isActive ? activeColors[level] : colors[level],
+                                                        borderRight: level !== 1 ? "1px solid #999" : "none"
+                                                    }}
+                                                    title={level === 3 ? "High" : level === 2 ? "Medium" : "Low"}
+                                                ></div>
+                                            );
+                                        })}
+                                    </div>
+                                </td>
+                                <td>
                                     <button
                                         className="btn btn-danger"
                                         onClick={() => onDeleteRow(idx)}
@@ -107,6 +194,7 @@ export default function OutputTable({
                             </tr>
                         ))}
                     </tbody>
+
                 </table>
 
                 <div className="text-center mt-4">

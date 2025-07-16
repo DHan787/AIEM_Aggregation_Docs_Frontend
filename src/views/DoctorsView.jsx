@@ -27,6 +27,7 @@ export default function DoctorsView() {
                 data.diagnoses.map(([diagnosis, probability]) => ({
                     diagnosis,
                     probability,
+                    urgency: data.urgency?.[diagnosis] || 0
                 }))
             );
         } catch (error) {
@@ -36,20 +37,28 @@ export default function DoctorsView() {
 
     const handleDiagnosisInputChange = (idx, value, type) => {
         const updated =
-            type === "diff" || type === "prob"
+            type === "diff" || type === "prob" || type === "diff-urgency"
                 ? [...differentDiagnoses]
                 : [...diagnoses];
+
         if (type === "diff") {
             updated[idx].diagnosis = value;
             setDifferentDiagnoses(updated);
         } else if (type === "prob") {
             updated[idx].probability = value;
             setDifferentDiagnoses(updated);
+        } else if (type === "diff-urgency") {
+            updated[idx].urgencyValue = value;
+            setDifferentDiagnoses(updated);
+        } else if (type === "urgency") {
+            updated[idx].urgencyValue = value;
+            setDiagnoses(updated);
         } else {
             updated[idx].spotValue = parseFloat(value);
             setDiagnoses(updated);
         }
     };
+
 
     const handleCheckboxChange = (idx) => {
         const updated = [...diagnoses];
@@ -78,6 +87,7 @@ export default function DoctorsView() {
                     ? parseFloat(d.spotValue)
                     : 1
                 : 0,
+            urgency: d.urgencyValue || 0
         }));
 
         const allProbs = [
@@ -86,6 +96,12 @@ export default function DoctorsView() {
                 d.probability ? parseFloat(d.probability) : 0
             ),
         ];
+
+        const allUrgencies = [
+            ...updatedDiagnoses.map((d) => d.urgency || 0),
+            ...differentDiagnoses.map((d) => d.urgencyValue || 0)
+        ];
+
 
         const differentLines = differentDiagnoses.map((d) => d.diagnosis);
 
@@ -96,6 +112,7 @@ export default function DoctorsView() {
                 body: JSON.stringify({
                     case_id: caseId,
                     probabilities: allProbs,
+                    urgencies: allUrgencies,
                     different: differentLines.join("\n"),
                 }),
             });
@@ -105,6 +122,7 @@ export default function DoctorsView() {
             console.error("Failed to submit data:", error);
         }
     };
+
 
     return (
         <div className="page-container">
