@@ -9,8 +9,14 @@ export default function DoctorsView() {
     const [diagnoses, setDiagnoses] = useState([]);
     const [differentDiagnoses, setDifferentDiagnoses] = useState([]);
     const [caseId, setCaseId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState("");
+
 
     const handleFetchData = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        setLoadingMessage("Loading data, please wait...");
         try {
             const res = await fetch(`${API_URL}/initialize`, {
                 method: "POST",
@@ -32,6 +38,9 @@ export default function DoctorsView() {
             );
         } catch (error) {
             console.error("Failed to fetch data:", error);
+        } finally {
+            setIsLoading(false);
+            setLoadingMessage("");
         }
     };
 
@@ -80,6 +89,9 @@ export default function DoctorsView() {
     };
 
     const handleSubmit = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        setLoadingMessage("Submitting data, please wait...");
         const updatedDiagnoses = diagnoses.map((d) => ({
             ...d,
             probability: d.selected
@@ -120,31 +132,46 @@ export default function DoctorsView() {
             alert(data.success ? "Update successful!" : "Update failed!");
         } catch (error) {
             console.error("Failed to submit data:", error);
+        } finally {
+            setIsLoading(false);
+            setLoadingMessage("");
         }
     };
 
 
     return (
-        <div className="page-container">
-            <div className="center-panel">
-                <h1 className="text-primary mb-4">AIEM</h1>
+        <>
+            {isLoading && (
+                <div className="loading-overlay">
+                    <div className="spinner" />
+                    <p style={{ marginTop: "1rem", fontWeight: "bold" }}>{loadingMessage}</p>
+                </div>
+            )}
 
-                <DiagnosisInputPanel
-                    inputText={inputText}
-                    onChange={setInputText}
-                    onFetch={handleFetchData}
-                />
+            <div className="page-container">
+                <div className="center-panel">
+                    <h1 className="text-primary mb-4">AIEM</h1>
 
-                <DiagnosisEditor
-                    diagnoses={diagnoses}
-                    onInputChange={handleDiagnosisInputChange}
-                    onCheckboxChange={handleCheckboxChange}
-                    differentDiagnoses={differentDiagnoses}
-                    onAddRow={handleAddRow}
-                    onDeleteRow={handleDeleteRow}
-                    onSubmit={handleSubmit}
-                />
+                    <DiagnosisInputPanel
+                        inputText={inputText}
+                        onChange={setInputText}
+                        onFetch={handleFetchData}
+                        isLoading={isLoading}
+                    />
+
+                    <DiagnosisEditor
+                        diagnoses={diagnoses}
+                        onInputChange={handleDiagnosisInputChange}
+                        onCheckboxChange={handleCheckboxChange}
+                        differentDiagnoses={differentDiagnoses}
+                        onAddRow={handleAddRow}
+                        onDeleteRow={handleDeleteRow}
+                        onSubmit={handleSubmit}
+                        isLoading={isLoading}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
+
 }

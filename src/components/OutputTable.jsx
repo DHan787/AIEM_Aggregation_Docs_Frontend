@@ -8,6 +8,7 @@ export default function OutputTable({
     onAddRow,
     differentDiagnoses,
     onDeleteRow,
+    isLoading = false, // 默认值为 false
 }) {
     return (
         <div style={{ overflowX: "auto", width: "100%" }}>
@@ -198,8 +199,8 @@ export default function OutputTable({
                 </table>
 
                 <div className="text-center mt-4">
-                    <button className="btn btn-primary px-5" onClick={onSubmit}>
-                        Submit Your Feedback
+                    <button onClick={onSubmit} disabled={isLoading}>
+                        {isLoading ? "Submitting..." : "Submit Feedback"}
                     </button>
                 </div>
             </div>
