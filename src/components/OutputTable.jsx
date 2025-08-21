@@ -8,7 +8,8 @@ export default function OutputTable({
     onAddRow,
     differentDiagnoses,
     onDeleteRow,
-    isLoading = false, // 默认值为 false
+    isLoading = false,
+    onDiagnosisClick,
 }) {
     return (
         <div style={{ overflowX: "auto", width: "100%" }}>
@@ -56,7 +57,16 @@ export default function OutputTable({
                             .sort((a, b) => b.probability - a.probability)
                             .map((diagnosis) => (
                                 <tr key={diagnosis.originalIndex}>
-                                    <td>{diagnosis.diagnosis}</td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            className="btn btn-link p-0 text-decoration-underline"
+                                            onClick={() => onDiagnosisClick?.(diagnosis.diagnosis)} // NEW
+                                            aria-label={`View details for ${diagnosis.diagnosis}`}
+                                        >
+                                            {diagnosis.diagnosis}
+                                        </button>
+                                    </td>
                                     <td>{diagnosis.probability.toFixed(1)}</td>
                                     <td>
                                         <div style={{

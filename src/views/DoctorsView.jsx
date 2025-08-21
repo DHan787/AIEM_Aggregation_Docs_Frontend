@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+/*
+ * @Author: Jiang Han
+ * @Date: 2025-07-17 01:10:12
+ * @Description: 
+ */
+import React, { useState, useMemo } from "react";
 import DiagnosisInputPanel from "../components/DiagnosisInputPanel";
 import DiagnosisEditor from "../components/DiagnosisEditor";
+import { buildConsensus } from "../components/mergeUtils";
+import DiagnosisDetails from "../components/DiagnosisDetails";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +18,10 @@ export default function DoctorsView() {
     const [caseId, setCaseId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState("");
-
+    const [parsedData, setParsedData] = useState(null);
+    const consensus = useMemo(() => parsedData ? buildConsensus(parsedData) : [], [parsedData]);
+    const [detailsOpen, setDetailsOpen] = useState(false);
+    const [selectedConsensus, setSelectedConsensus] = useState(null);
 
     const handleFetchData = async () => {
         if (isLoading) return;
@@ -36,12 +46,19 @@ export default function DoctorsView() {
                     urgency: data.urgency?.[diagnosis] || 0
                 }))
             );
+            setParsedData(data.parsed_data);
         } catch (error) {
             console.error("Failed to fetch data:", error);
         } finally {
             setIsLoading(false);
             setLoadingMessage("");
         }
+    };
+    const handleDiagnosisClick = (diagnosisName) => {
+        if (!consensus.length) return;
+        const hit = consensus.find(c => c.diagnosis === diagnosisName) || consensus[0];
+        setSelectedConsensus(hit || null);
+        setDetailsOpen(!!hit);
     };
 
     const handleDiagnosisInputChange = (idx, value, type) => {
@@ -168,6 +185,12 @@ export default function DoctorsView() {
                         onDeleteRow={handleDeleteRow}
                         onSubmit={handleSubmit}
                         isLoading={isLoading}
+                        onDiagnosisClick={handleDiagnosisClick}
+                    />
+                    <DiagnosisDetails
+                        open={detailsOpen}
+                        data={selectedConsensus}
+                        onClose={() => setDetailsOpen(false)}
                     />
                 </div>
             </div>

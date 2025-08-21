@@ -8,7 +8,9 @@ export default function DiagnosisEditor({
     onAddRow,
     onDeleteRow,
     onSubmit,
-    isLoading = false, // 默认值为 false
+    isLoading = false,
+    onDiagnosisClick,
+
 }) {
     if (diagnoses.length === 0) return <p className="text-muted">No data yet. Please input and fetch.</p>;
 
@@ -23,6 +25,7 @@ export default function DiagnosisEditor({
                 onDeleteRow={onDeleteRow}
                 onSubmit={onSubmit}
                 isLoading={isLoading}
+                onDiagnosisClick={onDiagnosisClick}
             />
         </div>
 
