@@ -167,7 +167,7 @@ export default function DoctorsView() {
 
             <div className="page-container">
                 <div className="center-panel">
-                    <h1 className="text-primary mb-4">AIEM</h1>
+                    <h1 className="text-primary mb-4">AI Super-Learner Diagnostic System</h1>
 
                     <DiagnosisInputPanel
                         inputText={inputText}
