@@ -54,6 +54,7 @@ export default function OutputTable({
                     <tbody>
                         {[...diagnoses]
                             .map((diagnosis, i) => ({ ...diagnosis, originalIndex: i }))
+                            .filter(d => Number(d.probability.toFixed(1)) !== 0)
                             .sort((a, b) => b.probability - a.probability)
                             .map((diagnosis) => (
                                 <tr key={diagnosis.originalIndex}>
